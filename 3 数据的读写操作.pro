@@ -48,7 +48,27 @@
     注意：IDL写入ASCII码文件默认每行宽度为80列(80个字符)，若输出的每行超过80个字符，则会自动换行，如果不想换行的话需要加上关键字width
     3.3 读写CSV文件
     CSV文件即逗号分隔值文件，是一种特殊的ASCII码文件，CSV文件以半角逗号","为分隔符，每条记录占一行，如果文件包含字段名，则字段名出现在第一行。
-    
+    3.3.1函数read_csv用于读取CSV格式文件，返回结果为结构体变量 
+    result=read_csv(fname[,count=variable][,header=variable][,num_records=value][,record_start=value])
+    其中，参数fname为csv文件名；关键字count用于返回文件的数据行数；关键字header用于返回每一列的字段名，若没有字段名，则返回空字符串值；关键字num_records用于设置读取几行数据，如果该
+    关键字未设置则默认读取所有行的数据；关键字record_start用于设置从第几行开始读取数据。
+    3.3.2函数 write_csv 用于写入csv文件。语法：write_csv,fanme,data1[,...,datan][,header=variable] 关键字header为字符串数组，用于设置CSV文件各个列的字段名，fname为csv文件名
+4 读写二进制文件
+    与ASCII码文件相比，二进制数据要紧凑的多，节约存储空间，常用于存储大数据文件。读取二进制文件之前必须要知道二进制文件的维数，数据类型以及存储顺序，否则无法正确读取文件的内容。
+    4.1 读取二进制文件，过程readu用于读取二进制码文件
+    readu,lun,var1,...,varn 其中，参数lun为二进制对应的逻辑设备号，参数var1,varn用于按顺序存储从文件中读入的数据。
+    4.2 写入二进制文件 过程writeu用于写入二进制文件
+    writeu,lun,var1,..,varn
+5 读写图像文件 IDL提供了常用的图像如BMP，GIF,JPEG,JPEG2000,PNG,PPM,SRF,TIFF和DICOM格式文件的查询，读取与写入等操作功能。
+    5.1 图像文件查询 函数query_image用于查询IDL支持的图像文件，返回图像文件的基本信息。如果该文件能够被IDL识别为图像文件，返回1，否则返回0
+    result=query_image(fname [,info][,channels=variable][,dimensions=variable][,pixel_type=variable][,type=variable]$
+     [,has_palette=variable][,image_index=index][,num_images=variable])
+    其中，参数fname为图像文件名；参数info返回图像的基本信息，为一结构体，和下面介绍的几个关键字是一回事；channels为图像波段数，dimensions为图像的列数和行数
+    pixel_type为图像像元值的数据类型；type为图像文件的类型，has_palette返回图像为真彩色还是伪彩色，真彩色值为0，伪彩色值为1，image_index为图像在文件中的索引号，
+    num_images为文件所包含的图像数目。
+    除了query_image函数之外，IDL还提供了query_bmp、query_gif、query_jpeg、query_jpeg2000、query_png、query_ppm、query_srf、query_tiff和query_dicom等函数指针对相应格式进行查询。
+    5.2 读取图像文件 read_image 用于读取IDL所支持的任何图像文件，结果为函数所读取的图像数组，如果该文件不是IDL所支持的图像文件，则返回-1.
+    如果是灰度图像，函数read_image返回的结果为二位数组，如果是真彩色图像，函数read_image返回的结果为三位数组。常用的图像文件多采用BIP格式存储(波段按行交叉格式)，而常用的遥感文件多采用BSQ格式存储(波段顺序格式)
 
 
 
