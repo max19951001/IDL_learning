@@ -69,15 +69,29 @@
     除了query_image函数之外，IDL还提供了query_bmp、query_gif、query_jpeg、query_jpeg2000、query_png、query_ppm、query_srf、query_tiff和query_dicom等函数指针对相应格式进行查询。
     5.2 读取图像文件 read_image 用于读取IDL所支持的任何图像文件，结果为函数所读取的图像数组，如果该文件不是IDL所支持的图像文件，则返回-1.
     如果是灰度图像，函数read_image返回的结果为二位数组，如果是真彩色图像，函数read_image返回的结果为三位数组。常用的图像文件多采用BIP格式存储(波段按行交叉格式)，而常用的遥感文件多采用BSQ格式存储(波段顺序格式)
-
-
-
-
-
-
-
-
-
+    函数 dialog_read_image 用于通过图形界面对话框来读取IDL支持的任何图像文件。用户点击"open"按钮，函数返回1，点击"cancel"按钮，则返回0
+    result=dialog_read_image([image=variable][,query=variable][,file=variable][,filter_type=string][,get_path=variable][,path=string][,title=string])
+    其中，关键字image用于存储所读取的图像；关键字query用于获取图像的的基本信息(和query_image中的info参数相同)；关键字file用于返回通过对话框所选择的文件名；关键字filter_type用于设置文件类型过滤条件，如'.bmp'、'.jpg'、'.png'等
+    关键字get_path用于获取所选文件所在的路径名；关键字path用于设置选择文件的初始所在路径；关键字title用于设置对话框的标题。
+    5.3 写入图像文件 过程write_image用于写入IDL所支持的任何图像文件
+    write_image,fname,format,data[,order] 其中，参数fname为图像文件名，参数format为字符串形式表达的图像文件格式，包括bmp,gif...等，参数data为待写入图像的数据；关键字order用于设置图像纵坐标从上往下算，该关键字不设置则默认从下往上算。
+    dialog_write_image 用于通过图形界面来写入图像文件。用户点击对话框的"save"按钮，返回1，如果用户点击的是对话框的"cancel"按钮则返回0
+    result=dialog_write_image(image[,filename=string][,type=variable][,/fix_type][,path=string][,title=string][,/warn_exist])
+    其中，image为待写入图像文件的数据；关键字filename用于返回对话框所选择的文件名；type用于设置保存文件类型，fix_type用于设置限定用户只能保存为关键字type所设定的类型；关键字path用于设置选择文件的初始所在路径；关键字title设置对话框标题，
+    warn_exist设置当前保存文件名在硬盘上已存在时是否提醒，未设置则默认操作不提醒而直接替换。
+6 读取HDF文件 HDF文件格式(Hierarchical Data Format,层次型数据格式)。一个HDF文件能够包含不同数据类型的大数据量的科学数据，包括图像、多维数组、指针以及文本数据等。目前用的比较多的HDF文件格式为HDF4和HDF5。
+    6.1 读取HDF4文件
+      6.1.1 HDF4文件的打开与查询
+      (1)函数hdf_sd_start(fname[,/read|,/rdwr][,/create]) read为HDF只读，rdwr为读写操作，create用于设置创建一个新的HDF文件
+      (2)过程 hdf_sd_fileinfo 用于获取HDF文件中科学数据集和全局属性的数目 hdf_sd_fileinfo,hd_id,nsds,natts,其中参数hd_id 为HDF文件标识符，即hdf_sd_start返回的结果，参数nsds返回HDF文件包含的科学数据集数目；参数natts返回HDF文件包含的全局属性数目
+    6.2 HDF4数据集操作
+      6.2.1 函数 hdf_sd_nametoindex 用于根据科学数据集的名称获取对应数据集索引号 result=hdf_sd_nametoindex(hd_id,sds_name)
+      其中，参数 hd_id 为HDF文件标识符，参数sds_name为数据集的名称。 
+      6.2.2 函数 hdf_sd_select 用于根据索引号选择科学数据集，返回一个科学数据集标识符 result=hdf_sd_select(hd_id,index)，其中，参数hd_id为HDF文件标识符，参数index为数据集的索引号
+      6.2.3 过程 hdf_sd_getinfo 用于查询已打开的HDF文件中某个科学数据集的基本信息(变量名称、描述、数据类型、维度数目、各个温度、有效值范围、单位等)
+      hdf_sd_getinfo,sd_id[,name=name][,natts=natts][,label=label][ndims=ndims][,dims=dism][,range=range][,type=type][,unit=unit]
+      其中，sd_id为科学数据集标识符，即hdf_sd_select的返回结果，name返回科学数据集的名称，natts返回科学数据集属性数目，参数label返回科学数据集描述，ndims返回科学数据集维度数目，参数dims返回科学数据集各个维度，range
+      返回科学数据集的有效值范围，type返回科学数据集数据类型，unit返回数据集单位
 
 
 
