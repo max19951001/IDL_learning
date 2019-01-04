@@ -15,7 +15,7 @@
     IDL提供三个过程来打开文件：openr打开一个文件进行读操作；openw打开一个文件进行写操作；openu打开一个文件进行读写操作。
     openr语法：openr,lun,fname,/get_lun 其中，参数lun为逻辑设备号变量；参数fname为文件名；关键字get_lun用于分配一个100~128中当前还没有被使用的逻辑设备号存入变量lun中。
     对文件的操作完成之后，需要运用free_lun过程关闭该文件对应的逻辑设备号
-    语法：free_lun,[,lun1,...,lunn]
+    语法 ：free_lun,[,lun1,...,lunn]
     2.2 文件的其他操作
     IDL的其他文件操作包括文件的选择，查询，删除，文件信息获取，文件指针操作和判断文件是否结束等。
     2.2.1 文件的选择
@@ -34,7 +34,7 @@
     参数recursive用于设置允许删除非空文件夹，如果该关键字未设置则默认不能删除非空文件夹，关键字quiet用于设置跳过不能删除的文件夹/文件，如果不设置，在遭遇不能删除的文件会报错。
     2.2.4获取文件信息
     (1)file_lines 用于查询文本文件的行数，result=file_lines(fname)\
-    (2)fstat 用于获取文件的基本信息，返回结果为结构体变量，result=fstat(lun)
+    (2)fstat 用于获取文件的基本信息，返回结果为结构    
     2.2.5 判断文件是否结束
     函数eof用于判断文件指针是否已经到了文件的末尾，即判断文件是否已经结束。当文件结束时，eof函数返回1，否则返回0.
 3 读写ASCII码文件
@@ -85,13 +85,57 @@
       (1)函数hdf_sd_start(fname[,/read|,/rdwr][,/create]) read为HDF只读，rdwr为读写操作，create用于设置创建一个新的HDF文件
       (2)过程 hdf_sd_fileinfo 用于获取HDF文件中科学数据集和全局属性的数目 hdf_sd_fileinfo,hd_id,nsds,natts,其中参数hd_id 为HDF文件标识符，即hdf_sd_start返回的结果，参数nsds返回HDF文件包含的科学数据集数目；参数natts返回HDF文件包含的全局属性数目
     6.2 HDF4数据集操作
-      6.2.1 函数 hdf_sd_nametoindex 用于根据科学数据集的名称获取对应数据集索引号 result=hdf_sd_nametoindex(hd_id,sds_name)
+      6.2.1 函数 hdf_sd_nametoindex 用于根据科学数据集的名称获取对应数据集索引号index=hdf_sd_nametoindex(hd_id,sds_name)
       其中，参数 hd_id 为HDF文件标识符，参数sds_name为数据集的名称。 
       6.2.2 函数 hdf_sd_select 用于根据索引号选择科学数据集，返回一个科学数据集标识符 result=hdf_sd_select(hd_id,index)，其中，参数hd_id为HDF文件标识符，参数index为数据集的索引号
       6.2.3 过程 hdf_sd_getinfo 用于查询已打开的HDF文件中某个科学数据集的基本信息(变量名称、描述、数据类型、维度数目、各个温度、有效值范围、单位等)
       hdf_sd_getinfo,sd_id[,name=name][,natts=natts][,label=label][ndims=ndims][,dims=dism][,range=range][,type=type][,unit=unit]
       其中，sd_id为科学数据集标识符，即hdf_sd_select的返回结果，name返回科学数据集的名称，natts返回科学数据集属性数目，参数label返回科学数据集描述，ndims返回科学数据集维度数目，参数dims返回科学数据集各个维度，range
       返回科学数据集的有效值范围，type返回科学数据集数据类型，unit返回数据集单位
+      6.2.4 过程hdf_sd_getdata 用于读取科学数据集的数据，hdf_sd_getdata,sd_id,value 其中，参数sd_id为科学数据集标识符，参数value返回读取出来的数据
+      6.2.5 过程hdf_sd_endaccess 用于关闭已打开的科学数据集 hdf_sd_endaccess,sd_id, 参数sd_id为科学数据集的标识符
+    6.3 HDF4文件的关闭  过程hdf_sd_end用于关闭打开的hdf文件，hdf_sd_end,hd_id
+    6.4 读取HDF5文件，其扩展名不仅仅是"*.hdf",还有*.h5,*hdf4，*he5等
+      6.4.1   HDF5文件的打开与查询
+        (1)h5_browser 用于打开一个图形界面的HDF5浏览器，对hdf5文件进行读取和查询，如果文件类型能够被正确识别，返回1 result=h5_browser([fname])
+        (2)h5f_open 用于打开HDF5文件，返回一个HDF文件标识符。result=h5f_open(fname[/write]),write用于设置打开HDF5文件为读写操作。
+        (3)函数h5_parse用于查询HDF文件的基本信息(文件名称，路径，维度数目，属性数目以及各个维度)，返回结果为结构体变量
+        result=h5_parse(fname,[,/read_data]),关键字read_data设置将HDF5文件中的数据一起返回给结果，如果不设置该关键字则仅仅把文件的相关信息返回
+      6.4.2 HDF5数据集操作
+        (1) 函数h5d_open用于打开HDF5中的某个科学数据集。result=h5d_open(hd_id,fieldname)，参数hd_id为文件标识符，即h5f_open的返回结果，参数fieldname为数据集的名称(包含路径)
+        (2)函数h5d_read(sd_id),sd_id为h5d_opend的返回结果
+        (3) 过程h5d_close 用于关闭已打开的科学数据集，h5d_close,sd_id
+      6.4.3 HDF5文件的关闭 h5f_close 用于关闭已打开的HDF5文件，h5f_close,hd_id
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 
 
 
