@@ -106,9 +106,16 @@
         (2)函数h5d_read(sd_id),sd_id为h5d_opend的返回结果
         (3) 过程h5d_close 用于关闭已打开的科学数据集，h5d_close,sd_id
       6.4.3 HDF5文件的关闭 h5f_close 用于关闭已打开的HDF5文件，h5f_close,hd_id
-        
-        
-        
+7 读取netCDF文件 netCDF 文件格式(network Common Data Form,网络通用数据格式)为存储气象科学数据而开发的一种数据格式。netcdf文件可以对网格数据进行高效的存储，管理，获取和分发操作。
+    7.1 netcdf文件的打开与查询
+        (1)函数ncdf_open用于打开netcdf文件，返回一个netcdf文件标识符。result=ncdf_open(fname,[,/write])
+        (2)函数ncdf_inquire用于对打开的netcdf文件进行查询并返回文件的基本信息(维度数目，变量数目以及属性数目)result=ncdf_inquire(nc_id)
+    7.2 netcdf变量操作
+        (1)函数ncdf_varinq用于查询已打开的netcdf文件中某个变量的基本信息。result=ncdf_varinq(nc_id,var_id),参数var_id为变量索引号或者名称
+        (2)函数ncdf_varid用于根据变量名称获取对应变量索引号 result=ncdf_varid(nc_id,var_name),var_name为变量的名称
+        (3)过程ncdf_varget用于读取netcdf文件中的变量数据。ncdf_varget,nc_id,var_id,value ,nc_id为netcdf文件标识符，var_id为变量索引。
+    7.3 netcdf文件的关闭 
+        过程ncdf_close用于关闭打开的netcdf文件，ncdf_close,nc_id
         
         
         
