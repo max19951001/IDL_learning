@@ -103,6 +103,44 @@ IDL提供两种绘制图形的方法：直接图形法和对象图形法。直�
     其中，关键字target为字符串数组，用于设置添加哪些图形对象的图例，如果该关键字未设置则默认添加当前图形对象的图例；关键字label用于设置图例要素的显示名称；关键字postion为一个2元素的数组[x,y],用于设置图例左上角在窗口中的位置；关键字smaple_width用于设置图例中曲线的宽度，默认为0.15；关键字auto_text_color用于设置将图例字体颜色修改为其所关联的曲线颜色，
     如果该关键字设置的法text_color将被忽略；关键字text_color用于设置图例字体的颜色；关键字font_size用于设置图例字体的大小，默认值为16；关键字color用于设置图例边框的颜色；关键字thick用于设置图例边框的线宽，关键字horizontal_alignment用于设置图例的水平对齐方式，0为左对齐，0.5为居中对齐，1为右对齐；关键字vertical_alignment用于设置图例的垂直对齐方式，
     0为底端对齐，0.5为居中对齐，1为顶端对齐；关键字horizontal_spacing和vartical_spacing用于设置图例要素之间的水平间隔和垂直间隔(单位为归一化坐标)
+3 柱状图
+    过程 bar_plot 用于绘制柱状图
+    语法：bar_plot,values[,background=value][,colors=vector][,barnames=string_array][,barwidth=value][,baroffest=value][,barspace=value][,baselines=vector][,title=string][,xtitle=string][,ytitle=string][,/outline][,/overplot][,/rotate]
+    其中，参数values为绘图的数据；关键字background用于设置背景的颜色；关键字color用于设置各个柱体的颜色，与参数values元素数目相同；关键字barnames用于设置每个柱体的名称；关键字barwidth用于设置柱体的宽度；关键字baroffset用于设置第一个柱体的位置；关键字barspace用于设置柱体之间的间隔；
+    关键字baselines用于设置柱体的纵坐标的起始值；关键字title用于设置图形的标题；关键字xtitle和ytitle分别用于设置x轴和y轴的标题；关键字outline用于设置将各个柱体加上边框；关键字overplot用于设置将当前图形叠加到现有图形上面，如果该关键字未设置则打开一个新的窗口绘图；关键字rotate用于设置将图形横过来，即绘制条形图
+    
+    除了传统的bar_plot过程之外，  IDL 8.0提供了一个新的barplot函数绘制柱状图
+    函数barplot用于绘制柱状图，结果返回一个图形对象
+    语法：graphic=barplot([locations,]values,[,buffer][,/current][,/device][,dimensions=array][,width=value][,bottom_values=value][,bottom_color=value][,fill_color=value][,color=value][,outline=value][axis_style={0|1|2|3}][xrange=[min,max]][yrange=[min,max]]
+    [,margin=array][,name=string][,title=string][,position=array][,/overplot][,/nodata][window_title=string][,/horizontal])
+    其中，参数locations用于设置各个柱体的位置，即横坐标，如果该参数没有设置的话默认为参数values各元素的下标值；参数values为绘图的数据；关键字buffer用于设置将图形保存在缓存中；关键字current用于设置在当前窗口内创建图形(重新绘制坐标轴)；关键字device用于设置关键字margin和position的值为设备坐标，如果该关键字未设置则默认为归一化坐标
+    关键字dimensions是一个两元素数组[width,height],用于设置窗口的宽度与高度，单位为像素；关键字width用于设置柱体的宽度，值为0~1,默认0.8；关键字bottom_values用于设置柱体的纵坐标起始值；关键字bottom_color用于设置柱体底部的色彩，如果该关键字设置则柱体色彩从bottom_color到fill_color渐变；关键字fill_color用于设置柱体色彩；
+    ；关键字color用于设置柱体边框的颜色；关键字outline用于设置是否将各个柱体加上边框，0表示不加边框，默认值1表示加边框；关键字axis_style用于设置坐标轴的性质；关键字xrange和yrange用于设置x轴和y轴的范围；关键字margin用于设置图形四周空白的宽度，可以用一个值使四周空白区域的宽度相同，或者用一个4元素数组[left,bottom,right,top]分别设置四边空白区域宽度
+    关键字name用于设置图形对象的名称；关键字title用于设置图形的标题；关键字postion为一个4元素数组，用于设置图形在窗口内的位置；关键字overplot用于设置将当前图形叠加到现有图形上面，关键字nodata用于设置在窗口类只绘制坐标轴，不绘制曲线；关键字window_title用于设置图形窗口的标题；关键字horizontal用于设置将图形横过来，即绘制条形图。
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
