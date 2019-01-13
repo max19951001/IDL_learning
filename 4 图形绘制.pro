@@ -55,7 +55,7 @@ IDL提供两种绘制图形的方法：直接图形法和对象图形法。直�
     函数plot用于绘制曲线图，结果返回一个图形对象。
     graphic=plot([x,]y [,/buffer]][,/current][,dimensions=array][,/device][axis_style={0|1|2|3}][,margin=array][,name=string][,title=string]
     [,position=array][,/overplot][,/nodata][,window_title=string])
-    其中，参数x位图形横坐标的数据，如果不设该参数则默认参数y的下标为图形横坐标的数据；参数y为图形纵坐标的数据；关键字buffer用于设置将图形保存再缓存中而不是新打开一个窗口；关键字current用于设置在当前窗口中创建图形(重新绘制坐标轴)；
+    其中，参数x位图形横坐标的数据，如果不设该参数则默认参数y的下标为图形横坐标的数据；参数y为图形纵坐标的数据；关键字buffer用于设置将图形保存在缓存中而不是新打开一个窗口；关键字current用于设置在当前窗口中创建图形(重新绘制坐标轴)；
     关键字dimension是一个两元数组[width,height]用于设置窗口的宽度和高度，单位为像素；关键字device用于设置关键字margin和position的值为设备坐标，若未设置，则默认为归一化坐标；关键字axis_style用于设置坐标轴的性质；
     关键字margin用于设置图形四周空白的宽度；关键字name用于设置图形对象的名称；关键字title用于设置图形的标题；关键字position为一个4元素数组，用于设置图形在宽口的位置；
     关键字overplot用于设置当前图形叠加到现有图形上面(采用现有坐标轴)；关键字nodata用于设置在窗口中，只绘制坐标轴；关键字windows_title用于设置图形窗口的标题。。
