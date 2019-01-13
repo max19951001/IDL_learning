@@ -36,13 +36,25 @@
         对话框让用户选择要打开的数据集；关键字hdfsd_interleave用于设置当文件为HDF格式时指定以哪种顺序存储，默认值0表示BSQ顺序，1表示BIL，2表示BIP顺序，invisible用于设置在envi窗口中不显示打开的文件。
         2 查询文件信息
         (1)过程envi_file_query用于对打开的envi文件进行查询，就获取该文件的列数、行数、波段数、头文件偏移、数据类型、数据存放顺序、定标系数等相关信息
-        
-        
-        
-        
-        
-        
-        
+        语法：envi_file_query,fid[,ns=variable][,nl=variable][nb=variable][,dims=variable][,data_type=variable][,interleave=variable][,bnames=variable][,fname=variable][,sname=variable]
+        [,offset=variable][,xstart=variable][,ystart=variable][,file_type=variable][,descript=variable][,data_gains=variable][,data_offsets=variable][,wl=variable][,wavelength_units=value]
+        [,num_class=variable][,class_names=variable][,lookup=variable]
+        其中，参数ns,nl,nb分别用于返回envi文件的列数，行数，波段数。关键字dims用于返回文件的空间范围；关键字data_type用于返回文件的数据类型；interleave为数据的存储顺序，0表示bsq存储，1表示bil存储，2表示bip存储；关键字bnames用于返回文件各波段的名称；
+        关键字fname用于返回文件的名称(含绝对路径)；关键字sname用于返回文件的短文件名，即不含路径的文件名；关键字offset返回文件的头文件偏移字节数；关键字xstart和ystart用于返回文件左上角顶点像元的行号和列号，关键字file_type返回文件类型；关键字descrip返回文件的描述字符串信息；
+        关键字data_gains和data_offsets返回各个波段定标系数中的增益值和偏移值；关键字wl用于返回文件各个波段的波长；关键字wavelength_units用于返回文件波长值的单位；关键字num_classes用于返回分类文件的类别数目；class_names返回分类文件的各类别名称；
+        关键字lookup用于返回分类文件各个类别的颜色值，为一个二位数组【3，num_classes】
+        (2)envi_file_query过程能够查询处envi文件的头文件的几乎所有信息，除了投影坐标信息map_infor
+        envi_get_map_info 函数获取投影信息，返回值为结构体
+        result=envi_get_map_info(fid=file id)
+        3 读取数据
+        数据量较大的时候不适合利用IDL的readu命令将遥感数据整个读入到内存中。envi提供了了两种方式读取envi文件的部分内容，分别读取一个波段或者一行的数据。
+        函数 envi_get_data 用于从一个打开的envi文件中读取一个波段的数据。
+        result=envi_get_data(fid=file id,dims=array,pos=long interger)
+        其中，关键字fid为envi文件fid号；关键字diMs读取数据的空间范围；关键字pos读取数据所在的波段位置。由于envi_get_data函数只能读取一个波段的数据，关键字pos必须为单个数值。
+        函数envi_get_slice用于从打开的envi文件中读取一行的数据。
+        reuslt=envi_get_slice(fid=file id,line=integer,pos=array,xs=value,xe=value,[/bil][,/bip])
+        关键字line用于设置读取数据所在的行号；关键字pos用于设置读取数据所在的波段位置，如果该关键字未设置这默认读取该行的所有波段；关键字xs和xe分别用于设置读取数据起始和终止列号；
+        关键字bil和bip分别设置返回结果为bil和bip格式，如果这两个关键字均未设置默认为BIL格式。
         
         
         
