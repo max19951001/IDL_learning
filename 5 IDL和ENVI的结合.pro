@@ -55,13 +55,25 @@
         reuslt=envi_get_slice(fid=file id,line=integer,pos=array,xs=value,xe=value,[/bil][,/bip])
         关键字line用于设置读取数据所在的行号；关键字pos用于设置读取数据所在的波段位置，如果该关键字未设置这默认读取该行的所有波段；关键字xs和xe分别用于设置读取数据起始和终止列号；
         关键字bil和bip分别设置返回结果为bil和bip格式，如果这两个关键字均未设置默认为BIL格式。
+        4 保存文件
+        envi的文件格式包含两个文件：头文件和数据文件。头文件(后缀名为hdr)为ascii码文件，数据文件(通常无后缀)为二进制格式文件。
+        过程envi_write_file用于将内存中IDL变量写为硬盘上或者内存中的envi格式文件，除了数据文件之外，还写入对应的头文件，写入的信息包括列数，行数，波段书，头文件偏移，数据类型，数据存放顺序等。
+        语法：envi_write_envi_file,data,out_name=varibale,/in_memory,[,/no_copy][,/no_write][,r_fid=variable][,/no_open],ns=variable,nl=variable,nb=variable,
+        out_dt={1|2|3|4|5|6|9|12|13|14|15},interleave={0|1|2}[,map_info=structure][,bnames=string array][,offset=value][,xstart=variable][,ystart=variable]
+        [,file_type=variable][,descript=variable][,wl=variable][,wavelength_units=value][,num_classes=variable][,class_names=variable][,lookup=variable]
+        其中，关键字data为待写入envi文件的IDL变量；关键字out_name用于设置输出envi文件名称；关键字in_memory用于设置将envi文件保存在内存中；关键字no_copy用于设置在将IDL变量写入envi文件后在内存中删除该变量；如果未设置则在内存中保留该变量；
+        关键字no_write用于设置不将envi头文件写入硬盘，如果该关键字未设置则默认将头文件写入硬盘；关键字r_fid返回所写入文件的fid号；关键字no_open用于设置不将envi文件打开显示，如果该关键字未设置则默认打开文件并加入aviable bands list;
+        关键字out_dt用于设置文件的数据类型；关键字interleave用于设置文件的数据存储顺序，0表示BSQ顺序，1表示BIL顺序，2表示BIP顺序；关键字bnames用于设置文件各波段的名称；关键字descrip用于设置文件的描述字符串信息；关键字wl用于设置文件各个波段的波长；
+        关键字wavelength_units用于设置文件波长值的单位；关键字num_classes用于设置分类文件的类别数目；关键字class_names用于设置分类文件的各类别名称；关键字lookup用于设置分类文件各个类别的颜色值，为一个二维数组[3,num_classes]
         
-        
-        
-        
-        
-        
-        
+        也可以分两步来保存envi格式文件；保存数据文件和保存头文件。首先通过writeu过程写入envi数据文件；然后通过envi_setup_head过程写入envi头文件，写入的信息包括列数，行数，波段数，头文件偏移，数据类型，数据存放顺序以及定标系数等。
+        envi_setup_head,fname=variable[,/write][,/open],ns=variable,nl=variable,nb=variable,data_type=variable,interleave={0|1|2}[,map_info=structure][,bnames=string array][,offset=value][,xstart=variable]
+        [,ystart=variable][,file_type=variable][,descrip=variable][,data_gains=variable][,data_offsets=variable][,wl=variable][,wavelength_units=value][,num_classes=variable][,class_names=variable][,lookup=variable]
+        其中，关键字fname用于设置头文件所对应的envi数据文件名称；关键字write用于设置将头文件写入硬盘，如果未设置则默认在内存中创建该头文件而不将其写入硬盘；关键字open用于设置将头文件对应的envi文件打开并显示在envi的avaliable bands list中，如果该关键字未设置则默认不打开文件；
+         关键字data_gains和data_offsets分别用于设置文件各个波段的增益值和偏移值；
+         
+         envi_write_envi_file 过程只能把IDL当前某个变量整个写入一个envi文件吗，而writeu过程则可以向一个文件中逐步添加内容，两种方法各有优劣。如果数据量较小，那么直接用envi_write_envi_file写入文件更为简单方便；如果数据量比较大，可以用envi_get_data或者envi_get_slice的方法
+         逐波段或者逐行读入数据进行处理，然后利用writeu逐波段或者逐行写入envi数据文件，最后使用envi_setup_head写入头文件，这样占用系统内存较少
         
 
 
