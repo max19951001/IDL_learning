@@ -74,14 +74,26 @@
          
          envi_write_envi_file 过程只能把IDL当前某个变量整个写入一个envi文件吗，而writeu过程则可以向一个文件中逐步添加内容，两种方法各有优劣。如果数据量较小，那么直接用envi_write_envi_file写入文件更为简单方便；如果数据量比较大，可以用envi_get_data或者envi_get_slice的方法
          逐波段或者逐行读入数据进行处理，然后利用writeu逐波段或者逐行写入envi数据文件，最后使用envi_setup_head写入头文件，这样占用系统内存较少
-        
-
-
-
-
-
-
-
+       过程envi_enter_data用于将数据保存为内存中的envi文件，并返回文件对应的fid号
+       envi_enter_data,data,r_fid=variable,ns=variable,nl=variable,nb=variable,data_type=variable,interleave={0|1|2}[map_info=structure][,bnames=string array][,xstart=variable][,ystart=variable][,file_type=variable][,descrip=variable]
+       data_gains=variable][,data_offset=variable][,wl=variable][,wavelenth_units=value][num_classes=variable][,class_names=variable][,lookup=variable]
+       其中，参数data为待写入envi文件的IDL变量，数据必须为BSQ顺序的二维或者三维数组；关键字r_fid返回所保存文件的fid号；data_gains和data_offset分别用于设置文件各个波段的增益值和偏移值；lookup用于设置分类文件各个类别的颜色值。
+       5 关闭文件
+       过程envi_file_mng用于对内存以及硬盘中的envi文件进行管理
+       语法：envi_file_mng,id=file id,/remove[,/delete]关键字remove从内存中移除文件，delete用于设置从硬盘删除指定文件。                          
+       6 投影坐标
+       ENVI以结构体数据来存储mapinfo信息，mapinfo包含了envi文件的投影，某个像元位置与投影坐标的对应关系，像元分辨率，旋转角度等内容。结构体域名分别有proj,mc,ps,rotation.
+       proj 投影信息，为结构体数据
+       mc 像元位置与投影坐标值的对应关系，为4个元素的一维双精度浮点型数组，4个元素分别为某像元的横坐标(文件坐标)、纵坐标(文件坐标)、投影横坐标、投影纵坐标。文件坐标等于IDL数据的下标，从0开始。   
+       ps 像元分辨率，为2个元素的一维双精度浮点型数组，2个元素分别为x和y方向的像元分辨率
+       rotation 旋转角度，双精度浮点型，顺时针方向正北方向起算，单位为度。
+       (1)envi_map_info_create 函数用于创建新的mapinfo
+       语法：result=envi_map_info_create(mc=array,ps=array[,name=string][,/geographic][,/utm][,zone=integer][,/south][,type=integer][,/arbitrary][,proj=structure][,params=array][,datum=value][,units=integer][,rotation=value])
+       其中，关键字mc用于设置图像位置与投影坐标的对应关系，为4个元素的一维数组(文件坐标)；关键字ps用于设置像元分辨率，为2个元素的一维数组，2个元素分别为x和y方向的像元分辨率；关键字name用于设置mapinfo投影的名称；关键字geographic用于设置mapinfo的投影为地理坐标(即经纬度坐标系)；关键字
+       utm用于设置mapinfo的投影为utm投影(通用墨卡托投影)关键字zone用于设置utm投影的分带带号；关键字south用于设置utm投影为南半球投影；关键字type用于设置投影类型，为整型变量(常用的transverse mercator投影type值为3，lamber投影type值为4，albers投影type值为9),关键字arbitrary用于
+       设置创建一个自定义的投影；关键字proj用于设置投影，该关键字为结构体变量，由envi_proj_create或envi_get_projection函数获取；关键字params用于设置投影参数，arbitray,geographic和utm投影不用设置param关键字(如果关键字arbitrary,geographic或者utm已经设置的话，不需要设置proj关键字)
+       对于其他投影，通过proj关键字或者datum,name,params,south,type,units和zone关键字来定义投影)；关键字datum用于设置基准面，为字符串变量，最常用的基准面为“WGS-84”；关键字units用于设置投影的单位，为整型变量，可通过envi_translate_projection_units函数将字符串格式的单位转换为整形变量，
+       对于地理坐标系，默认单位为度，对于其他投影，默认为米；关键字rotation用于设置旋转角度，顺时针方向从正北方向算起，单位为度。
 
 
 
