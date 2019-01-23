@@ -94,7 +94,20 @@
        设置创建一个自定义的投影；关键字proj用于设置投影，该关键字为结构体变量，由envi_proj_create或envi_get_projection函数获取；关键字params用于设置投影参数，arbitray,geographic和utm投影不用设置param关键字(如果关键字arbitrary,geographic或者utm已经设置的话，不需要设置proj关键字)
        对于其他投影，通过proj关键字或者datum,name,params,south,type,units和zone关键字来定义投影)；关键字datum用于设置基准面，为字符串变量，最常用的基准面为“WGS-84”；关键字units用于设置投影的单位，为整型变量，可通过envi_translate_projection_units函数将字符串格式的单位转换为整形变量，
        对于地理坐标系，默认单位为度，对于其他投影，默认为米；关键字rotation用于设置旋转角度，顺时针方向从正北方向算起，单位为度。
-
-
+       (2)函数envi_proj_create用于创建新的投影信息
+       result=envi_proj_create([,name=string][,/geographic][,/utm][,zone=integer][,/south][,type=integer][,/arbitrary][,params=array][,datum=value][,units=integer])
+       其中，关键字name用于设置投影的名称；关键字geographic用于设置投影为地理坐标(即经纬度坐标)；关键字utm用于设置投影为utm投影(通用墨卡托投影)；关键字type用于设置投影类型，为整型变量；关键字arbitrary用于设置创建一个自定义的投影；关键字params用于设置投影参数，包含了除name和datum之外的所有信息，如果关键字arbitrary，geographic或者
+       utm已经设置的话，不需要设置params关键字；关键字datum用于设置基准面，为字符串变量， envi支持的基准面为“wgs-84“，关键字units用于设置投影的单位，为整型变量，可通过envi_translate_projection_units函数将字符串格式的单位转换为整型变量，对于地理坐标系，默认单位为度，对于其他投影，默认单位为米。
+       (3)过程envi_convert_file_map_projection用于对envi文件进行投影转换。
+       envi_convert_file_map_projection,fid=file id,O_proj=structure,dims=array,pos=array,out_name=string[,r_fid=variable][,background=integer][,O_pixel_size=array][,grid=array][,warp_method={0|1|2|3}][,degree=value][,/zero_edge][,rasampling={0|1|2}][,out_bname=string array]
+       其中，关键字fid为envi文件的fid号；关键字o_proj用于设置转换为哪种投影；关键字dims用于设置待转换数据的空间范围；关键字pos用于设置待转换数据的波段位置；关键字out_name用于设置转换后文件的文件名；关键字r_fid返回转换后文件的fid号；关键字background用于设置输出文件的背景值，默认值为0；关键字o_pixel_size用于设置x和y方向的像元分辨率，为两个元素的数组；
+       关键字grid用于设置x和y方向提取出多少控制点，为两个元素的数组，默认值为x和y方向每10个点去一个点；关键字warp_method用于设置投影转换方法，0为RST方法，1为多项式方式，2为三角网方法，3为逐像元严格数学模型方法，如果该关键字未设置则默认为RST方法；关键字degree用于设置多项式的阶数，该关键字仅仅在投影转换方式为多项式方法时才有效，默认值为1；关键字zero_edge用于设置将
+       将所有三角网以外的像元值都设为背景值，该关键字仅仅在投影转换方法为三角网时才有效；关键字resampling 用于设置重采样方法，0为最近邻法，1为双线性插值，2为立方卷积，默认为最邻近法；关键字out_bname用于设置输出文件各波段的名称。
+       
+       
+       
+       
+       
+       
 
 
