@@ -103,6 +103,73 @@
        其中，关键字fid为envi文件的fid号；关键字o_proj用于设置转换为哪种投影；关键字dims用于设置待转换数据的空间范围；关键字pos用于设置待转换数据的波段位置；关键字out_name用于设置转换后文件的文件名；关键字r_fid返回转换后文件的fid号；关键字background用于设置输出文件的背景值，默认值为0；关键字o_pixel_size用于设置x和y方向的像元分辨率，为两个元素的数组；
        关键字grid用于设置x和y方向提取出多少控制点，为两个元素的数组，默认值为x和y方向每10个点去一个点；关键字warp_method用于设置投影转换方法，0为RST方法，1为多项式方式，2为三角网方法，3为逐像元严格数学模型方法，如果该关键字未设置则默认为RST方法；关键字degree用于设置多项式的阶数，该关键字仅仅在投影转换方式为多项式方法时才有效，默认值为1；关键字zero_edge用于设置将
        将所有三角网以外的像元值都设为背景值，该关键字仅仅在投影转换方法为三角网时才有效；关键字resampling 用于设置重采样方法，0为最近邻法，1为双线性插值，2为立方卷积，默认为最邻近法；关键字out_bname用于设置输出文件各波段的名称。
+       (4)过程envi_convert_file_coordinates用于基于某文件将其文件坐标转换为地图坐标，或者反过来将其地图坐标转为文件坐标
+       envi_convert_file_coordinates,fid,xf,yf,xmap,ymap[,/to_map]
+       其中，尝试fid为文件的fid号；xf和yf为文件坐标系下的横纵坐标；xmap，ymap为地图坐标系下的横纵坐标，关键字to_map用于设置将该文件坐标转换为地图坐标。
+       (5)过程envi_convert_projection_coordinates 用于将某投影系下的地图坐标转换为另一投影下的地图坐标
+       envi_convert_projection_coordinates,ixmap,iymap,iproj,oxmap,oymap,oproj
+       其中，参数ixmap和iymap分别为输入投影系下地图坐标的横坐标和纵坐标值；参数iproj为输入投影；参数oxmap和oymap分别为输出投影系下地图坐标的横坐标和纵坐标值；参数oproj为输出投影。
+       7 矢量文件操作
+       (1)函数 envi_evf_open 用于在envi中打开一个evf矢量文件，并返回evf fid号。
+       语法：result=envi_evf_open(fname) fname为evf文件名
+       (2)过程 envi_evf_info 用于对打开的evf文件进行查询，获取该文件的相关信息，包括矢量记录数目，投影信息，图层名称等。
+       envi_evf_info,evf_id[,num_recs=variable][,projection=structure][,layer_name=string][,data_type=variable] 
+       num_recs返回evf文件的矢量记录数目；layer_name返回图层的名称，data_type返回evf文件的数据类型。
+       (3)过程 envi_evf_to_shapefile 用于将某个打开的evf文件转换为shapefile格式文件
+       envi_evf_to_shapefile,evf_id,output_shapefile_rootname 参数output_shapefile_rootname为输出shapefile文件的根名称(shapefile数据由若干文件构成：rootname.shp、rootname.shx、rootname.dbf、rootname.prj)
+       (4)envi_evf_read_record 用于提取evf文件中的记录，结果为二维浮点型或者双精度浮点型数组[2,num_records],num_records为该记录包含的点数，第一列为各个点横坐标值，第二列为各个点纵坐标值。
+       result=envi_evf_read_record(evf_id,record_number,type=value) 参数record_number为待提取的记录编号(0~num_recs-1)；关键字type用于返回该记录的类型(1代表点，3代表线，5代表多边形，8代表多点)
+       过程envi_evf_close用于关闭打开的evf文件，envi_evf_close,evf_id
+       (5)函数envi_evf_define_init 用于定义一个新的evf文件，并返回指向evf文件的指针。
+       result=envi_evf_define_init(fname[,projection=structure][,layer_name=string][,data_type=variable])
+       (6)过程envi_evf_define_add_record,evf_ptr,points[,type=value]
+       envi_evf_define_add_record,evf_ptr,points[,type=value]
+       参数evf_ptr为指向文件evf文件的指针；参数points为待加入evf文件的之路所包含的点，为2维数组[2,npts],第一列为横坐标，第二列为纵坐标，点数据类型为单个点对，线数据类型由若干个点对构成；
+       多边形数据由若干个点对构成，而且第一个和最后一个点对相同；关键字type用于设置该条记录的类型。
+       (7)过程envi_evf_define_close用于结束一个新evf文件的定义。
+       result=envi_evf_define_close(evf_ptr[,/return_id])关键字return_id用于设置返回evf文件的evf fid号。
+       (8)过程envi_write_dbf_file,fname,attributes
+       参数fname为evf文件名，参数attributes为写入dbf文件的属性信息，为结构体变量，结构体域名即为属性表的字段名。
+       8  ROI操作
+       (1) 过程envi_restore_rois用于载入ROI文件。envi_restore_rois,fname
+       参数fname为roi文件名
+       (2)函数envi_get_roi_ids用于获取与某个文件相关联的ROI id号，返回结果为ROI id号数组。
+       result=envi_get_roi_ids(fid=file id,roi_names=variable[,/long_name][,/short_name][,roi_colors=variable])
+       其中，关键字fid为ROI相关联的文件的id号；关键字roi_names用于返回各个ROI的名称；关键字long_name用于设置返回的ROI名称为长名称(包含ROI名称，颜色名称，像元数目以及所关联的图像尺寸)，short_name用于
+       设置返回的ROI名称为短名称(仅仅包含ROI名称)；关键字roi_colors用于返回各个ROI的颜色，为二维数组[3,num_rois],num_rois为ROI数目。
+       (3)过程envi_get_roi_information用于获取与某个文件相关联的ROI的相关信息。
+       envi_get_roi_information,roi_ids,roi_names=variable[,/long_name][,/short_name],npts=variable,roi_colors=variable)
+       关键字roi_ids为ROI id号数组，roi_names用于返回各个ROI的名称，关键字long_name用于设置返回的ROI名称为长名称，关键字npts用于返回各个ROI包含的像元数，关键字roi_colors用于返回各个ROI的颜色。
+       (4)函数envi_get_roi用于获取某个ROI中所有像元的位置，结果以一维数组下标的方式表达(类似where函数的返回结果)
+       result=envi_get_roi(roi_id,roi_name=variable,roi_color=variable)
+       参数roi_id为某个ROI 的roi id号；关键字roi_names返回该roi的名称，roi_color用于返回该ROI的颜色
+       (5)函数envi_get_roi_dims_ptr 用于将ROI id号转换为DIMS ROI指针值，即DIMS数组的第一个元素值。
+       result=envi_get_roi_dims_ptr(roi_id)
+       (6)函数envi_create_roi用于创建一个新的roi并返回roi id 号
+       result=envi_create_roi(ns=value,nl=value,name=string,color=integer)
+       关键字ns和nl分别用于设置ROI对应图像的列数和行数；关键字name用于设置ROI名称，关键字color用于设置ROI颜色(索引值，默认为2)
+       (7)过程envi_define_roi用于在roi中定义点、线和多边形对象(每个ROI均可以包含不同类型的对象)
+       envi_define_roi,roi_id,/point|,/ploygon|,/ployline，xpts=array,ypts=array /point|,/ploygon|,/ployline分别设置定义的队形类型为点，线，面
+       关键字xpts和ypts分别用于设置定义的对象中各个像元的横坐标和纵坐标
+       (8)过程envi_delete_rois用于从envi中删除roi,可以同时删除一组ROI或者所有ROI
+       envi_delete_rois[,roi_ids][,/all]
+       (9)过程envi_save_rois用于将roi保存到文件
+       envi_save_rois,fname,roi_id
+       (10)envi_get_roi_data用于获取ROI对应的文件数据
+       result=envi_get_roi_data(roi_id,fid=file id,pos=value)
+       参数roi_id 为roi id号，关键字fid为roi所对应的文件fid号，关键字pos用于设置读取数据所在的波段位置。
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
        
        
        
