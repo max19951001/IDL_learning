@@ -21,8 +21,9 @@
   2.1 定义数组 直接定义和函数定义(数组在IDL中先列后行)
   直接定义：a=[a,x],b=[[3,2,1],[4,3,2]]
   函数定义：有两种函数，一种是直接所有元素赋值为0，有bytarr(),intarr(),uintarr(),long64arr(),fltarr(),dblarr(),strarr()
-  另一种是所有元素初始化为该元素在数组中的索引值(下标值)bindgen(),indgen(),lindgen(),findgen(),sindgen()\
-  其他两种创建数组(1)创建所有值相同的数组result=replicate(value,d1,...,d8)
+  另一种是所有元素初始化为该元素在数组中的索引值(下标值)bindgen(),indgen(),lindgen(),findgen(),sindgen()
+  其他两种创建数组
+  (1)创建所有值相同的数组result=replicate(value,d1,...,d8)d1,...,d8为数组
   (2)result=make_array([d1[d2,...,d8]],[dimension=vector][,value=value][,size=vector][,/index][,type=type_code])
   2.2 数组下标
    为了避免和函数混淆，数组访问一般用中括号[].
@@ -35,12 +36,12 @@
   (2)数组的大小和类型(size)，结果为一个长整型数组。包含了数组的维数、大小和类型等信息。result=size(expression [,/n_dimensions|,/dimension|,/type|,/tname|,/n_elements])
   其中，n_dimensions返回数组维数，dimension返回每一维的大小，type返回数组类型，tname返回数组类型(float),n_elements返回数组元素
   (3)数组的最值 result=max(arr,[max_subscript|index][,dimension=1 or 2]) max_subscript为最大值的下标，dimension为维数，1维代表列，2代表行
-  (4)数组的均值，方差，标准差result=mean(arr[,dimension=value]),result=variance(arr[,dimension=value]),result=stddev(array[,dimension=value])
+  (4)数组的均值，方差，标准差result=mean(arr[,dimension=value]),result=variance(arr[,dimension=value]),result=stddev(array[,dimension=value])dimension为维数，1维代表列，2代表行
   (5)数组求和 result=total(arr[,dimension=value][,/cumulative])，cumulative为累加值。
   (6)数组元素的查找*****  result=where(arr_expression[,count][,complement=variable][ncomplement=variable]),返回值为数组元素的索引，complement为不满足条件的数组元素下标，ncomplement为不满足条件的元素个数
   (7)数组的重排列
       (1)reform 不改变元素数目的前提下改变数组维数，result=reform(arr,d1[],...,d8)
-      (2)transpose 对数组进行转置运算result=transpose(arr)
+      (2)transpose 对数组进行转置运算result=transpose(arr)  ;转置的意义是什么?对于遥感图像就是旋转了90°?
       (3)sort 对数组元素进行升序排列，返回值为数组中各个元素的下标。
       (4)reverse 用于对数组进行翻转，返回值为翻转后的数组result=reverse(array)
       (5)shift用于对数组元素进行平移，result=shift(arr,s1,...,sn)s1,..sn为数组各维的平移数，正值表示向前平移
@@ -49,7 +50,7 @@
   直接创建 用单引号或者双引号括起来。如果字符串中包含单引号或者双引号时，则需要同时使用单引号和双引号。
   3.2 连接字符串 用"+"将字符串连接
   strjoin 将一个字符串数组连接为一整个字符串。result=strjoin(string[,delimiter]),其中string为字符串数组，delimiter为连接符
-  3.3 字符串操作函数***********
+  3.3 字符串操作函数***********c
   (1)计算字符串长度strlen,result=strlen(expression)
   (2)字符串大小写，strlowcase()将所有字符串变量转为小写，strupcase()转为大写，result=strlowcase(string)
   (3)字符串移除空格strcompress()用于移除字符串中的空格result=strcompress(string[,/remove_all]),若不设关键字，则移除变量中所有的连续的空格压缩为一个空格
