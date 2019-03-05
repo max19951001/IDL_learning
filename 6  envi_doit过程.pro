@@ -40,7 +40,47 @@
   其中，w_fid为待配准文件对应的fid号；关键字w_dims用于设置待配准数据的空间范围；关键字w_pos为待配准数据的波段位置；关键字r_fid返回配准结果文件的fid号；关键字out_name用于设置结果的输出文件名，in_memory设置将配准结果保存在内存中；关键字pts为控制点数组，为4列的双精度浮点型数组。关键字b_fid为基准图像文件的fid号，该关键字仅仅在影像到影像的配准时有效；关键字proj为pts关键字中地图坐标所属投影，在关键字仅在影像到地图的配准
   时有效；method用于设置配准方法，默认为3，即多项式转换坐标并采用最邻近法重采样；degree设置多项式的阶数，默认值为1；关键字background设置配准结果文件的背景值，默认值为0；关键字pixel_size设置配准结果文件的像元分辨率，该值尽在影像到地图的配准时有效；xsize和ysize设置配准结果x和y方向的尺寸；x0和y0设置配准结果图像左上角的坐标值，out_bname设置配准结果各波段的名称。
 7 影像融合
-  sharpen_doit 用于进行hsv融合或颜色归一化(brovey融合)
+  (1)sharpen_doit 用于进行hsv融合或颜色归一化(brovey融合)
+  envi_doit,"sharpen_doit",fid=array,f_fid=file id,f_dims=array,f_pos=long integer,r_fid=variable,out_name=string,/in_memory,method={0|1}，interp={0|1|2},out_bname=string array
+  fid为多光谱文件的fid号，为包含三个元素的一维数组，3个元素分别对应rgb 3个波段所属的fid号；关键字pos为多光谱文件中待进行融合的rgb三个颜色通道对应的波段位置；r_fid为待进行融合的高分辨率文件的fid号；f_dims用于设置高分辨率数据的空间范围；f_Pos设置高空间分辨率数据所在的波段位置；r_fid返回融合的fid号；out_name设置融合文件的输出文件名；in_memory设置将融合结果保存在内存中。method设置融合方法，0为hsv融合，1为brovey融合
+  interp设置重采样方法，默认值0为最邻近法，1为双线性插值，2为立方卷积；out_bname设置融合结果各波段的名称。
+  (2)envi_gs_sharpen_doit进行gram_schmidt融合
+  envi_doit,"envi_gs_sharpen_doit",fid=file id,dims=array,pos=array,hires_fid=file id,hires_dims=array,hires_pos=array,r_fid=file id,out_name=string,/in_memory,method={0|1|2|3},interp={0|1|2}，[,filter_fid=variable][,filter_Pos=array][,lores_fid=array][,lores_dims=array][,lores_pos=array],out_bname=string array
+  hires_fid为高分辨率文件的fid号，hires_dims为高分辨率数据的空间范围；r_fid为融合结果fid号，method设置创建低分辨率模拟全色波段的方法，0为求各波段平均值作为模拟全色波段，1为直接选择一个与多光谱尺寸相同的图像来模拟全色波段，2为根据传感器来模拟全色波段，3为根据定义的滤波函数来模拟全色波段；interp设置重采样方法，filter_fid设置滤波函数文件，filter_Pos设置滤波函数在文件中的位置，默认值为0；关键字lores_fid设置低分辨率模拟全色波段的文件fid号
+  lores_dims设置低分辨率模拟全色波段数据的空间范围
+8 主成分变换
+   pc_rotate用于对envi文件进行主成分变化
+   envi_doit,"pc_rotate",fid=file id,dims=array,pos=array,r_fid=variabke,out_name=string,/in_memory,/forward,out_nb=integer,out_dt={1|4|5},/no_plot,mean=value,eval=value,out_bname=string array
+   r_fid返回主成分变换结果文件的fid号；forward用于设置进行主成分正变化，未设置则进行主成分反变化；out_nb设置主分量数目，该值必须小于等于输入数据的波段数，out_dt为输出数据类型，1为整形，4为浮点型，5为双精度浮点型，no_plot设置不显示主分量的特征值图，mean设置各波段的君子，eval和evec设置特征值和特征向量。
+9 坏值插补操作
+   dem_bad_data_doit用于基于delaunay三角网拟合对DEM文件进行坏值插补。该例程不仅仅适用于DEM文件，同样可用于填补其他文件的坏值像元。
+   envi_doit,"dem_bad_data_doit",fid=file id,dims=array,pos=array,r_fid=variable,out_name=string,/in_memory,m_fid=file id,m_pos=value,bad_value=value,min_thresh=value,max_thresh=value,out_bname=string array
+   m_fid设置掩膜数据的fid号，bad_value用于设置坏值像元的具体值(此时坏值为一特定值)；min_thresh和max_thresh为坏值像元的最小值和最大值，此时坏值为一个范围；out_bname设置结果文件各波段的名称。
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
