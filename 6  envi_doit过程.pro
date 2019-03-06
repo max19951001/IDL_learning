@@ -56,11 +56,15 @@
    dem_bad_data_doit用于基于delaunay三角网拟合对DEM文件进行坏值插补。该例程不仅仅适用于DEM文件，同样可用于填补其他文件的坏值像元。
    envi_doit,"dem_bad_data_doit",fid=file id,dims=array,pos=array,r_fid=variable,out_name=string,/in_memory,m_fid=file id,m_pos=value,bad_value=value,min_thresh=value,max_thresh=value,out_bname=string array
    m_fid设置掩膜数据的fid号，bad_value用于设置坏值像元的具体值(此时坏值为一特定值)；min_thresh和max_thresh为坏值像元的最小值和最大值，此时坏值为一个范围；out_bname设置结果文件各波段的名称。
-  
-  
-  
-  
-  
+10 计算机分类
+   class_doit 用于对envi文件进行监督或者非监督分类
+   envi_doit,'class_doit',fid=file id,dims=array,pos=array,r_fid=variable,out_name=string,/in_memory,method={0|1|2|3|4|5|6|7|8},m_fid=file id,m_pos=value,class_names=string array,lookup=array,out_bname=string
+   method用于设置分类方法，关键字m_fid设置掩膜数据的fid号，class_names设置分类文件的各类别名称，lookup设置各个类别的颜色值，为二维数组[3,num_classes]
+11 ROI转换为分类图像
+    envi_roi_to_image_doit 用于根据roi创建分类图像(仅仅将roi对应像元转换为对应的类型，roi以外的像元均视为未分类类型)
+   envi_doit,"envi_roi_to_image_doit",fid=file id,roi_ids=value,r_fid=variable,out_name=string,/in_memory,class_values=array
+   fid为roi对应的envi文件id号，roi_ids为roi id号数组，r_fid返回分类文件的fid号，class_values设置分类图像中各个类别的值，未分类类型的值为0
+   
   
   
   
