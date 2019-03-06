@@ -64,13 +64,17 @@
     envi_roi_to_image_doit 用于根据roi创建分类图像(仅仅将roi对应像元转换为对应的类型，roi以外的像元均视为未分类类型)
    envi_doit,"envi_roi_to_image_doit",fid=file id,roi_ids=value,r_fid=variable,out_name=string,/in_memory,class_values=array
    fid为roi对应的envi文件id号，roi_ids为roi id号数组，r_fid返回分类文件的fid号，class_values设置分类图像中各个类别的值，未分类类型的值为0
-   
-  
-  
-  
-  
-  
-  
+12 envi 影像分块处理
+   idl可以调用envi的分块函数来进行分块运算：首先通过envi_init_tile函数初始化分块，然后利用envi_get_tile函数获取分块数据继续运算，最后通过envi_tile_done过程释放分块
+   (1)函数envi_init_tile用于初始化分块，返回的结果为分块的ID(tile ID),这是与分块联系的唯一参考ID,并可以被其他分块函数所使用
+   result=envi_init_tile(fid,pos[,interleave={0|1|2}][,num_tiles=variable][,tile_scale=integer][,match_id=value][,xs=value][,xe=value][,ys=value][,ye=value])
+   num_tile返回分块的数目，tile_scale设置分块的大小，match_id用于设置使得当前函数的分块设置遵循该关键字所指定的分块ID的设置；xs和xe分别设置起始和终止列号(文件坐标)；ys和ye设置起始和终止行号(文件坐标)
+   (2)envi_get_tile用于获取分块数据
+   result=envi_get_tile(tile_id,cur_tile,band_index=variable,ye=variable,ys=variable)
+   参数tile_id 为envi_init_tile函数返回的分块id号；关键字cur_tile为当前分块的索引号(0~num_tiles-1)；band_index返回当前分块(必须为BSQ格式)所在波段号；关键字ys和ye分别返回起始和终止行号
+   (3)envi_tile_done,tile_id
+   用于释放分块，结束分块运算。
+   处理大数据时，除了通过分块运算解决之外，也可以用envi_get_data或者envi_get_slice的方法逐波段或者逐行读入数据进行处理。
   
   
   
