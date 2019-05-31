@@ -41,5 +41,44 @@ eg： array=[1,2,3]
 注意：variable 通常为链表，数组或者哈希表
 ```
 
+### 5.2.3  while循环
 
+```idl
+while 条件 do 语句
+或
+while 条件 do begin
+	语句块
+endwhile
+
+```
+
+### 5.2.4  Repeat循环
+
+循环中需要一直进行，直到满足才结束，此时可以调用Repeat...Until循环语句。
+
+```idl
+repeat 语句 
+endrep until 条件满足
+或者
+repeat begin 
+语句块
+endrep until 条件满足
+
+eg: i=10
+	repeat begin
+		i--
+	endrep until i lt 0
+	print,i
+
+```
+
+
+
+##  5.3  条件语句
+
+### 5.3.1  if语句
+
+```idl
+
+```
 
